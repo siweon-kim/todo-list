@@ -43,5 +43,6 @@
       "packages": true,
       "tooling": true,
     },
+    "js/ts.tsdk.path": "📱 expo/node_modules/typescript/lib",
   },
 }
