@@ -1,0 +1,47 @@
+{
+  "folders": [
+    {
+      "name": "📱 expo",
+      "path": "apps/expo",
+    },
+    {
+      "name": "🌐 nextjs",
+      "path": "apps/nextjs",
+    },
+    {
+      "name": "📦 api",
+      "path": "packages/api",
+    },
+    {
+      "name": "📦 auth",
+      "path": "packages/auth",
+    },
+    {
+      "name": "📦 db",
+      "path": "packages/db",
+    },
+    {
+      "name": "📦 ui",
+      "path": "packages/ui",
+    },
+    {
+      "name": "📦 validators",
+      "path": "packages/validators",
+    },
+    {
+      "name": "🛠 tooling",
+      "path": "tooling",
+    },
+    {
+      "name": "🏠 root",
+      "path": ".",
+    },
+  ],
+  "settings": {
+    "files.exclude": {
+      "apps": true,
+      "packages": true,
+      "tooling": true,
+    },
+  },
+}
