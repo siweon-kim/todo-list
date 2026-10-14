@@ -1,11 +1,11 @@
 import { relations } from "drizzle-orm";
 import {
-  mysqlTable,
-  varchar,
-  text,
-  timestamp,
   boolean,
   index,
+  mysqlTable,
+  text,
+  timestamp,
+  varchar,
 } from "drizzle-orm/mysql-core";
 
 export const user = mysqlTable("user", {
