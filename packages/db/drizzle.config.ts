@@ -7,7 +7,7 @@ if (!process.env.DB_URL) {
 const nonPoolingUrl = process.env.DB_URL;
 
 export default {
-  schema: "./src/schema.ts",
+  schema: "./src/schema/index.ts",
   dialect: "mysql",
   dbCredentials: { url: nonPoolingUrl },
   casing: "snake_case",
