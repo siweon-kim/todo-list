@@ -27,6 +27,7 @@ export function CreatePostForm() {
   const trpc = useTRPC();
 
   const queryClient = useQueryClient();
+
   const createPost = useMutation(
     trpc.post.create.mutationOptions({
       onSuccess: async () => {
