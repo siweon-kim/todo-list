@@ -38,7 +38,11 @@ export const todoRouter = {
 
   delete: publicProcedure //
     .input(z4.string())
-    .mutation(({ ctx, input }) => {
-      return ctx.db.delete(Todo).where(eq(Todo.id, input));
+    .mutation(async ({ ctx, input }) => {
+      const result = await ctx.db.delete(Todo).where(eq(Todo.id, input));
+
+      if (getAffectedRows(result) === 0) {
+        throw new TRPCError({ code: "NOT_FOUND" });
+      }
     }),
 } satisfies TRPCRouterRecord;
