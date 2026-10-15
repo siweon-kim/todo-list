@@ -1,4 +1,5 @@
 import type { TRPCRouterRecord } from "@trpc/server";
+import { TRPCError } from "@trpc/server";
 import z4 from "zod/v4";
 
 import { desc, eq, sql } from "@acme/db";
@@ -6,6 +7,7 @@ import { Todo } from "@acme/db/schema";
 import { CreateTodoSchema } from "@acme/db/validators";
 
 import { publicProcedure } from "../trpc";
+import { getAffectedRows } from "../util/routerHelper";
 
 export const todoRouter = {
   all: publicProcedure //
@@ -23,17 +25,15 @@ export const todoRouter = {
 
   toggle: publicProcedure //
     .input(z4.string())
-    .mutation(({ ctx, input }) => {
-      const result = ctx.db //
+    .mutation(async ({ ctx, input }) => {
+      const result = await ctx.db //
         .update(Todo)
         .set({ completed: sql`NOT ${Todo.completed}` })
         .where(eq(Todo.id, input));
 
-      console.log(result);
-
-      //   if (getAffectedRows(result) === 0) {
-      //     throw new TRPCError({ code: "NOT_FOUND" });
-      //   }
+      if (getAffectedRows(result) === 0) {
+        throw new TRPCError({ code: "NOT_FOUND" });
+      }
     }),
 
   delete: publicProcedure //

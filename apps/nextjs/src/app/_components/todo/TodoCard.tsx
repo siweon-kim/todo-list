@@ -1,7 +1,12 @@
 "use client";
 
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+
 import type { RouterOutputs } from "@acme/api";
 import { cn } from "@acme/ui";
+import { toast } from "@acme/ui/toast";
+
+import { useTRPC } from "~/trpc/react";
 
 interface TodoCardProps {
   todo: RouterOutputs["todo"]["all"][number];
@@ -14,8 +19,36 @@ const dateFormatter = new Intl.DateTimeFormat("ja-JP", {
 });
 
 export default function TodoCard({ todo }: TodoCardProps) {
-  // const trpc =useTRPc();
-  // const queryClient = useQueryClient();
+  const trpc = useTRPC();
+  const queryClient = useQueryClient();
+
+  const toggleComplited = useMutation(
+    trpc.todo.toggle.mutationOptions({
+      onSuccess: async () => {
+        await queryClient.invalidateQueries(trpc.todo.all.queryFilter());
+      },
+
+      onError: async (err) => {
+        switch (err.data?.code) {
+          case "UNAUTHORIZED":
+            toast.error("ログインが必要です。");
+            break;
+
+          case "NOT_FOUND":
+            toast.error("データが見付かれません。");
+            await queryClient.invalidateQueries(trpc.todo.pathFilter());
+            break;
+
+          default:
+            toast.error("Todoの作成に失敗しました。");
+        }
+      },
+    }),
+  );
+
+  const handleClickCard = () => {
+    toggleComplited.mutate(todo.id);
+  };
 
   return (
     <div
@@ -24,6 +57,7 @@ export default function TodoCard({ todo }: TodoCardProps) {
         "hover:border-primary/40",
         todo.completed && "opacity-60",
       )}
+      onClick={handleClickCard}
     >
       <span
         className={cn(

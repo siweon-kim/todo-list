@@ -14,7 +14,6 @@ import { useTRPC } from "~/trpc/react";
 
 export default function CreateTodoForm() {
   const trpc = useTRPC();
-
   const queryClient = useQueryClient();
 
   const createTodo = useMutation(
