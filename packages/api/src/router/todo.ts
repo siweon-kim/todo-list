@@ -39,6 +39,6 @@ export const todoRouter = {
   delete: publicProcedure //
     .input(z4.string())
     .mutation(({ ctx, input }) => {
-      ctx.db.delete(Todo).where(eq(Todo.id, input));
+      return ctx.db.delete(Todo).where(eq(Todo.id, input));
     }),
 } satisfies TRPCRouterRecord;

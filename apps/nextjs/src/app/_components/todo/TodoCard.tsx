@@ -14,7 +14,7 @@ const dateFormatter = new Intl.DateTimeFormat("ja-JP", {
 });
 
 export default function TodoCard({ todo }: TodoCardProps) {
-  // const trpc =useTRPC();
+  // const trpc =useTRPc();
   // const queryClient = useQueryClient();
 
   return (

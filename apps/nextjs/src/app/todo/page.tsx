@@ -1,11 +1,15 @@
 import { Suspense } from "react";
 
 import { HydrateClient, prefetch, trpc } from "~/trpc/server";
+import CreateTodoForm from "../_components/todo/CreateTodoForm";
 import TodoCardSkeleton from "../_components/todo/TodoCardSkeleton";
 import TodoList from "../_components/todo/TodoList";
 
 export default function TodoListPage() {
   prefetch(trpc.todo.all.queryOptions());
+
+  // クライアントサイドでhttp通信を通してデータを持ち込む
+  //   trpc.todo.all.queryOptions();
 
   return (
     <HydrateClient>
@@ -19,17 +23,24 @@ export default function TodoListPage() {
               今日のやることを整理しましょう。
             </p>
           </header>
-          <Suspense
-            fallback={
-              <div className="flex w-full flex-col gap-3">
-                <TodoCardSkeleton />
-                <TodoCardSkeleton />
-                <TodoCardSkeleton pulse={false} />
-              </div>
-            }
-          >
-            <TodoList />
-          </Suspense>
+
+          <div className="mb-6">
+            <CreateTodoForm />
+          </div>
+
+          <div>
+            <Suspense
+              fallback={
+                <div className="flex w-full flex-col gap-3">
+                  <TodoCardSkeleton />
+                  <TodoCardSkeleton />
+                  <TodoCardSkeleton pulse={false} />
+                </div>
+              }
+            >
+              <TodoList />
+            </Suspense>
+          </div>
         </div>
       </main>
     </HydrateClient>
