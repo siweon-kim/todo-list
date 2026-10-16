@@ -22,6 +22,7 @@ export default function CreateTodoForm() {
         form.reset();
         await queryClient.invalidateQueries(trpc.todo.pathFilter());
       },
+
       onError: (err) => {
         toast.error(
           err.data?.code === "UNAUTHORIZED"

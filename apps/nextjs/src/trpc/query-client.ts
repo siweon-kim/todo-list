@@ -1,5 +1,8 @@
+import type { DefaultError } from "@tanstack/react-query";
 import {
   defaultShouldDehydrateQuery,
+  MutationCache,
+  QueryCache,
   QueryClient,
 } from "@tanstack/react-query";
 import SuperJSON from "superjson";
@@ -11,6 +14,11 @@ export const createQueryClient = () =>
         // With SSR, we usually want to set some default staleTime
         // above 0 to avoid refetching immediately on the client
         staleTime: 30 * 1000,
+        retry: (failureCount, err) => {
+          if (err.message === "UNAUTHORIZED") return false;
+
+          return failureCount < 3;
+        },
       },
       dehydrate: {
         serializeData: SuperJSON.serialize,
@@ -30,4 +38,20 @@ export const createQueryClient = () =>
         deserializeData: SuperJSON.deserialize,
       },
     },
+
+    queryCache: new QueryCache({
+      onError: (err) => {
+        handleAuthError(err);
+      },
+    }),
+    mutationCache: new MutationCache({
+      onError: (err) => {
+        handleAuthError(err);
+      },
+    }),
   });
+
+const handleAuthError = (err: DefaultError) => {
+  if (typeof window === "undefined") return;
+  if (err.message === "UNAUTHORIZED") window.location.href = "/";
+};

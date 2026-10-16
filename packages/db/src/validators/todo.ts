@@ -8,6 +8,7 @@ export const CreateTodoSchema = createInsertSchema(Todo, {
 }).omit({
   id: true,
   completed: true,
+  userId: true,
   createdAt: true,
   updatedAt: true,
 });

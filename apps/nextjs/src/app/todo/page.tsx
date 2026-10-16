@@ -9,7 +9,7 @@ export default function TodoListPage() {
   prefetch(trpc.todo.all.queryOptions());
 
   // クライアントサイドでhttp通信を通してデータを持ち込む
-  //   trpc.todo.all.queryOptions();
+  // trpc.todo.all.queryOptions();
 
   return (
     <HydrateClient>

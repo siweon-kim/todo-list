@@ -2,44 +2,55 @@ import type { TRPCRouterRecord } from "@trpc/server";
 import { TRPCError } from "@trpc/server";
 import z4 from "zod/v4";
 
-import { desc, eq, sql } from "@acme/db";
+import { and, desc, eq, sql } from "@acme/db";
 import { Todo } from "@acme/db/schema";
 import { CreateTodoSchema } from "@acme/db/validators";
 
-import { publicProcedure } from "../trpc";
+import { protectedProcedure } from "../trpc";
 import { getAffectedRows } from "../util/routerHelper";
 
 export const todoRouter = {
-  all: publicProcedure //
+  all: protectedProcedure //
     .query(({ ctx }) => {
+      const userId = ctx.session.user.id;
+
       return ctx.db.query.Todo.findMany({
+        where: eq(Todo.userId, userId),
         orderBy: desc(Todo.createdAt),
       });
     }),
 
-  create: publicProcedure //
+  create: protectedProcedure //
     .input(CreateTodoSchema)
     .mutation(({ ctx, input }) => {
-      return ctx.db.insert(Todo).values(input);
+      const userId = ctx.session.user.id;
+
+      return ctx.db.insert(Todo).values({ ...input, userId });
     }),
 
-  toggle: publicProcedure //
+  toggle: protectedProcedure //
     .input(z4.string())
     .mutation(async ({ ctx, input }) => {
+      const userId = ctx.session.user.id;
+
       const result = await ctx.db //
         .update(Todo)
         .set({ completed: sql`NOT ${Todo.completed}` })
-        .where(eq(Todo.id, input));
+        .where(and(eq(Todo.id, input), eq(Todo.userId, userId)));
 
       if (getAffectedRows(result) === 0) {
         throw new TRPCError({ code: "NOT_FOUND" });
       }
     }),
 
-  delete: publicProcedure //
+  delete: protectedProcedure //
     .input(z4.string())
     .mutation(async ({ ctx, input }) => {
-      const result = await ctx.db.delete(Todo).where(eq(Todo.id, input));
+      const userId = ctx.session.user.id;
+
+      const result = await ctx.db //
+        .delete(Todo)
+        .where(and(eq(Todo.id, input), eq(Todo.userId, userId)));
 
       if (getAffectedRows(result) === 0) {
         throw new TRPCError({ code: "NOT_FOUND" });
