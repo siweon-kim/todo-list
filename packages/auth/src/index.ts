@@ -23,6 +23,10 @@ export function initAuth<
     }),
     baseURL: options.baseUrl,
     secret: options.secret,
+    emailAndPassword: {
+      enabled: true,
+      autoSignIn: false, // 会員登録後はログイン画面で改めてログインさせる
+    },
     plugins: [
       oAuthProxy({
         productionURL: options.productionUrl,

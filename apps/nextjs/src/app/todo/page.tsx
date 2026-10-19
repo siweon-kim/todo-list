@@ -1,11 +1,16 @@
 import { Suspense } from "react";
+import { redirect } from "next/navigation";
 
+import { getSession } from "~/auth/server";
 import { HydrateClient, prefetch, trpc } from "~/trpc/server";
 import CreateTodoForm from "../_components/todo/CreateTodoForm";
 import TodoCardSkeleton from "../_components/todo/TodoCardSkeleton";
 import TodoList from "../_components/todo/TodoList";
 
-export default function TodoListPage() {
+export default async function TodoListPage() {
+  const session = await getSession();
+  if (!session) redirect("/");
+
   prefetch(trpc.todo.all.queryOptions());
 
   // クライアントサイドでhttp通信を通してデータを持ち込む

@@ -1,47 +1,26 @@
-// import { Suspense } from "react";
+import { redirect } from "next/navigation";
 
-import Link from "next/link";
+import { getSession } from "~/auth/server";
+import SignInForm from "./_components/auth/SignInForm";
 
-import { HydrateClient, prefetch, trpc } from "~/trpc/server";
-
-// import { AuthShowcase } from "./_components/auth-showcase";
-// import {
-//   CreatePostForm,
-//   PostCardSkeleton,
-//   PostList,
-// } from "./_components/posts";
-
-export default function HomePage() {
-  prefetch(trpc.post.all.queryOptions());
+export default async function HomePage() {
+  const session = await getSession();
+  if (session) redirect("/todo");
 
   return (
-    <HydrateClient>
-      <main className="container h-screen py-16">
-        <Link href="/todo">
-          <button>TODO LIST</button>
-        </Link>
-        {/* <div className="flex flex-col items-center justify-center gap-4">
-          <h1 className="text-5xl font-extrabold tracking-tight sm:text-[5rem]">
-            Create <span className="text-primary">T3</span> Turbo
+    <main className="container flex min-h-screen items-center justify-center py-16">
+      <div className="w-full max-w-sm">
+        <header className="mb-8 text-center">
+          <h1 className="text-4xl font-extrabold tracking-tight">
+            My <span className="text-primary">Todo</span>
           </h1>
-          <AuthShowcase />
+          <p className="text-muted-foreground mt-2 text-sm">
+            ログインしてやることを管理しましょう。
+          </p>
+        </header>
 
-          <CreatePostForm />
-          <div className="w-full max-w-2xl overflow-y-scroll">
-            <Suspense
-              fallback={
-                <div className="flex w-full flex-col gap-4">
-                  <PostCardSkeleton />
-                  <PostCardSkeleton />
-                  <PostCardSkeleton />
-                </div>
-              }
-            >
-              <PostList />
-            </Suspense>
-          </div>
-        </div> */}
-      </main>
-    </HydrateClient>
+        <SignInForm />
+      </div>
+    </main>
   );
 }
