@@ -5,3 +5,20 @@
 @import "nativewind/theme";
 
 @import "@acme/tailwind-config/theme";
+
+/*
+ * @acme/tailwind-config/theme の `@theme inline` は `--shadow-xs: var(--shadow-xs)` のような
+ * 自己参照を含む。ブラウザではカスケードで解決されるが、react-native-css では無限再帰
+ * (Maximum call stack size exceeded) になるため、ネイティブ側では実値で上書きする。
+ */
+@theme {
+  --tracking-normal: 0em;
+  --shadow-2xs: 0px 2px 10px 0px hsl(0 0% 0% / 0.03);
+  --shadow-xs: 0px 2px 10px 0px hsl(0 0% 0% / 0.03);
+  --shadow-sm: 0px 2px 10px 0px hsl(0 0% 0% / 0.05);
+  --shadow: 0px 2px 10px 0px hsl(0 0% 0% / 0.05);
+  --shadow-md: 0px 2px 10px 0px hsl(0 0% 0% / 0.05);
+  --shadow-lg: 0px 2px 10px 0px hsl(0 0% 0% / 0.05);
+  --shadow-xl: 0px 2px 10px 0px hsl(0 0% 0% / 0.05);
+  --shadow-2xl: 0px 2px 10px 0px hsl(0 0% 0% / 0.13);
+}

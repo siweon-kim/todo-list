@@ -14,8 +14,11 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@acme/db": "workspace:*",
+    "@acme/validators": "workspace:*",
     "@better-auth/expo": "catalog:",
     "@legendapp/list": "^2.0.14",
+    "@tanstack/react-form": "catalog:",
     "@tanstack/react-query": "catalog:",
     "@trpc/client": "catalog:",
     "@trpc/server": "catalog:",

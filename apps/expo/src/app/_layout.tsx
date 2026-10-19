@@ -3,6 +3,7 @@ import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { QueryClientProvider } from "@tanstack/react-query";
 
+import { Toaster } from "~/components/ui/toast";
 import { queryClient } from "~/utils/api";
 
 import "../styles.css";
@@ -15,18 +16,18 @@ export default function RootLayout() {
     <QueryClientProvider client={queryClient}>
       {/*
           The Stack component displays the current page.
-          It also allows you to configure your screens 
+          It also allows you to configure your screens
         */}
       <Stack
         screenOptions={{
-          headerStyle: {
-            backgroundColor: "#c03484",
-          },
+          headerShown: false,
           contentStyle: {
-            backgroundColor: colorScheme == "dark" ? "#09090B" : "#FFFFFF",
+            // テーマの--backgroundと同じ色
+            backgroundColor: colorScheme == "dark" ? "#141116" : "#FCFAFD",
           },
         }}
       />
+      <Toaster />
       <StatusBar />
     </QueryClientProvider>
   );

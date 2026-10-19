@@ -1,3 +1,4 @@
+import { Platform } from "react-native";
 import Constants from "expo-constants";
 
 /**
@@ -22,5 +23,15 @@ export const getBaseUrl = () => {
       "Failed to get localhost. Please point to your production server.",
     );
   }
+
+  // Androidエミュレーターでは127.0.0.1/localhostがエミュレーター自身を指すため、
+  // ホストPCを指す10.0.2.2に置き換える（Metroの8081はadb reverseで届くがAPIの3000は届かない）
+  if (
+    Platform.OS === "android" &&
+    (localhost === "127.0.0.1" || localhost === "localhost")
+  ) {
+    return "http://10.0.2.2:3000";
+  }
+
   return `http://${localhost}:3000`;
 };
